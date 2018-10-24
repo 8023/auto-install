@@ -3,7 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
+	"path/filepath"
 
 	"golang.org/x/sys/windows/registry"
 )
@@ -38,8 +40,9 @@ const (
 )
 
 func main() {
-	fmt.Println("test")
-	showDesktopIcon()
+	swpath := filepath.Abs("./software")
+	fmt.Println(filepath.Dir(os.Args[0]))
+	// showDesktopIcon()
 }
 
 func showDesktopIcon(icons ...DesktopIcon) {
@@ -66,32 +69,44 @@ func showDesktopIcon(icons ...DesktopIcon) {
 }
 
 func installWinrar(version WinrarVersion) {
-	filename := map[WinrarVersion]string{
+	fname := map[WinrarVersion]string{
 		Winrar501x64: "WinRAR_5.01_x64_SC.exe",
 		Winrar501x86: "WinRAR_5.01_x86_SC.exe",
 	}
 
 	bout := bytes.NewBuffer(nil)
 	berr := bytes.NewBuffer(nil)
-	cmd := exec.Command(filename[version], "/s")
+	cmd := exec.Command(fname[version], "/s")
 	cmd.Stdout = bout
 	cmd.Stderr = berr
 	cmd.Run()
 	fmt.Println("out", bout.String())
-	fmt.Printf("out", berr.String())
+	fmt.Println("out", berr.String())
 }
 
-func installAdobepdf() {
-	filename := map[AdobepdfVersion]string{
+func installAdobepdf(version AdobepdfVersion) {
+	fname := map[AdobepdfVersion]string{
 		AcroRdrDC157: "AcroRdrDC1500720033_zh_CN.exe",
 	}
+
+	bout := bytes.NewBuffer(nil)
+	berr := bytes.NewBuffer(nil)
+	cmd := exec.Command(fname[version], "/sALL", "/msi", "/quiet")
+	cmd.Stdout = bout
+	cmd.Stderr = berr
+	cmd.Run()
+	fmt.Println("out", bout.String())
+	fmt.Println("out", berr.String())
 }
 
-func installOffice() {
-	dirname := map[OfficeVersion]string{
+func installOffice(version OfficeVersion) {
+	fname := map[OfficeVersion]string{
 		Office2007x86: "office2007pro.chs\\setup.exe",
 		Office2010x86: "office2010pro.chs\\setup.exe",
 	}
+
+	fmt.Println(fname[version])
+
 }
 
 func connectWIFI() {
@@ -99,9 +114,5 @@ func connectWIFI() {
 }
 
 func activateWindows() {
-
-}
-
-func getProgramPath() {
 
 }
