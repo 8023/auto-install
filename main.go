@@ -91,8 +91,9 @@ func installAdobepdf(fpath string, version AdobepdfVersion) {
 	}
 	abspath := filepath.Join(fpath, fname[version])
 
-	switch(version) {
-	case
+	switch version {
+	case AcroRdrDC157:
+
 	}
 	bout := bytes.NewBuffer(nil)
 	berr := bytes.NewBuffer(nil)
