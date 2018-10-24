@@ -41,7 +41,7 @@ const (
 func main() {
 	swpath, _ := filepath.Abs("./software")
 	installWinrar(swpath, Winrar501x64)
-
+	installAdobepdf(swpath, AcroRdrDC157)
 	// showDesktopIcon()
 }
 
@@ -81,23 +81,27 @@ func installWinrar(fpath string, version WinrarVersion) {
 	cmd.Stdout = bout
 	cmd.Stderr = berr
 	cmd.Run()
-	fmt.Println("out", bout.String())
-	fmt.Println("out", berr.String())
+	fmt.Println("rarout", bout.String())
+	fmt.Println("rarerr", berr.String())
 }
 
 func installAdobepdf(fpath string, version AdobepdfVersion) {
 	fname := map[AdobepdfVersion]string{
 		AcroRdrDC157: "AcroRdrDC1500720033_zh_CN.exe",
 	}
+	abspath := filepath.Join(fpath, fname[version])
 
+	switch(version) {
+	case
+	}
 	bout := bytes.NewBuffer(nil)
 	berr := bytes.NewBuffer(nil)
-	cmd := exec.Command(fname[version], "/sALL", "/msi", "/quiet")
+	cmd := exec.Command(abspath, "/sALL", "/msi", "/norestart")
 	cmd.Stdout = bout
 	cmd.Stderr = berr
 	cmd.Run()
-	fmt.Println("out", bout.String())
-	fmt.Println("out", berr.String())
+	fmt.Println("pdfout", bout.String())
+	fmt.Println("pdferr", berr.String())
 }
 
 func installOffice(fpath string, version OfficeVersion) {
