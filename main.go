@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"os/exec"
 	"path/filepath"
@@ -42,7 +41,7 @@ func main() {
 	swpath, _ := filepath.Abs("./software")
 	installWinrar(swpath, Winrar501x64)
 	installAdobepdf(swpath, AcroRdrDC157)
-	// showDesktopIcon()
+	showDesktopIcon()
 }
 
 func showDesktopIcon(icons ...DesktopIcon) {
@@ -75,14 +74,14 @@ func installWinrar(fpath string, version WinrarVersion) {
 	}
 	abspath := filepath.Join(fpath, fname[version])
 
-	bout := bytes.NewBuffer(nil)
-	berr := bytes.NewBuffer(nil)
-	cmd := exec.Command(abspath, "/s")
-	cmd.Stdout = bout
-	cmd.Stderr = berr
+	cmd := new(exec.Cmd)
+	switch version {
+	case Winrar501x64, Winrar501x86:
+		cmd = exec.Command(abspath, "/s")
+	default:
+		return
+	}
 	cmd.Run()
-	fmt.Println("rarout", bout.String())
-	fmt.Println("rarerr", berr.String())
 }
 
 func installAdobepdf(fpath string, version AdobepdfVersion) {
@@ -91,18 +90,14 @@ func installAdobepdf(fpath string, version AdobepdfVersion) {
 	}
 	abspath := filepath.Join(fpath, fname[version])
 
+	cmd := new(exec.Cmd)
 	switch version {
 	case AcroRdrDC157:
-
+		cmd = exec.Command(abspath, "/sALL", "/msi", "/norestart", "ALLUSERS=1", "EULA_ACCEPT=YES")
+	default:
+		return
 	}
-	bout := bytes.NewBuffer(nil)
-	berr := bytes.NewBuffer(nil)
-	cmd := exec.Command(abspath, "/sALL", "/msi", "/norestart")
-	cmd.Stdout = bout
-	cmd.Stderr = berr
 	cmd.Run()
-	fmt.Println("pdfout", bout.String())
-	fmt.Println("pdferr", berr.String())
 }
 
 func installOffice(fpath string, version OfficeVersion) {
