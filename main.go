@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"os/exec"
 	"path/filepath"
 
@@ -40,8 +39,9 @@ const (
 )
 
 func main() {
-	swpath := filepath.Abs("./software")
-	fmt.Println(filepath.Dir(os.Args[0]))
+	swpath, _ := filepath.Abs("./software")
+	installWinrar(swpath, Winrar501x64)
+
 	// showDesktopIcon()
 }
 
@@ -68,15 +68,16 @@ func showDesktopIcon(icons ...DesktopIcon) {
 	}
 }
 
-func installWinrar(version WinrarVersion) {
+func installWinrar(fpath string, version WinrarVersion) {
 	fname := map[WinrarVersion]string{
 		Winrar501x64: "WinRAR_5.01_x64_SC.exe",
 		Winrar501x86: "WinRAR_5.01_x86_SC.exe",
 	}
+	abspath := filepath.Join(fpath, fname[version])
 
 	bout := bytes.NewBuffer(nil)
 	berr := bytes.NewBuffer(nil)
-	cmd := exec.Command(fname[version], "/s")
+	cmd := exec.Command(abspath, "/s")
 	cmd.Stdout = bout
 	cmd.Stderr = berr
 	cmd.Run()
@@ -84,7 +85,7 @@ func installWinrar(version WinrarVersion) {
 	fmt.Println("out", berr.String())
 }
 
-func installAdobepdf(version AdobepdfVersion) {
+func installAdobepdf(fpath string, version AdobepdfVersion) {
 	fname := map[AdobepdfVersion]string{
 		AcroRdrDC157: "AcroRdrDC1500720033_zh_CN.exe",
 	}
@@ -99,7 +100,7 @@ func installAdobepdf(version AdobepdfVersion) {
 	fmt.Println("out", berr.String())
 }
 
-func installOffice(version OfficeVersion) {
+func installOffice(fpath string, version OfficeVersion) {
 	fname := map[OfficeVersion]string{
 		Office2007x86: "office2007pro.chs\\setup.exe",
 		Office2010x86: "office2010pro.chs\\setup.exe",
