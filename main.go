@@ -5,6 +5,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/go-vgo/robotgo"
 	"golang.org/x/sys/windows/registry"
 )
 
@@ -38,10 +39,19 @@ const (
 )
 
 func main() {
-	swpath, _ := filepath.Abs("./software")
-	installWinrar(swpath, Winrar501x64)
-	installAdobepdf(swpath, AcroRdrDC157)
-	showDesktopIcon()
+	// swpath, _ := filepath.Abs("./software")
+	// installWinrar(swpath, Winrar501x64)
+	// installAdobepdf(swpath, AcroRdrDC157)
+	// showDesktopIcon()
+	println(robotgo.Scale())
+	println(robotgo.ScaleX())
+	println(robotgo.ScaleY())
+	bitmap := robotgo.OpenBitmap("test.png")
+	// robotgo.BitmapClick(bitmap)
+	x, y := robotgo.FindBitmap(bitmap)
+	robotgo.MoveMouse(x, y)
+	println(x, y)
+
 }
 
 func showDesktopIcon(icons ...DesktopIcon) {
@@ -93,7 +103,7 @@ func installAdobepdf(fpath string, version AdobepdfVersion) {
 	cmd := new(exec.Cmd)
 	switch version {
 	case AcroRdrDC157:
-		cmd = exec.Command(abspath, "/sALL", "/msi", "/norestart", "ALLUSERS=1", "EULA_ACCEPT=YES")
+		cmd = exec.Command(abspath, "/sALL", "/norestart", "/msi", "ALLUSERS=1", "EULA_ACCEPT=YES")
 	default:
 		return
 	}
