@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 	"path/filepath"
+	"syscall"
 
 	"github.com/go-vgo/robotgo"
 	"golang.org/x/sys/windows/registry"
@@ -43,12 +44,19 @@ func main() {
 	// installWinrar(swpath, Winrar501x64)
 	// installAdobepdf(swpath, AcroRdrDC157)
 	// showDesktopIcon()
+
+	syscall.NewLazyDLL("user32.dll").NewProc("SetProcessDPIAware").Call()
+
 	println(robotgo.Scale())
+	x, y := robotgo.GetScaleSize()
+	println(x, y)
+	x, y = robotgo.GetScreenSize()
+	println(x, y)
 	println(robotgo.ScaleX())
 	println(robotgo.ScaleY())
 	bitmap := robotgo.OpenBitmap("test.png")
 	// robotgo.BitmapClick(bitmap)
-	x, y := robotgo.FindBitmap(bitmap)
+	x, y = robotgo.FindBitmap(bitmap)
 	robotgo.MoveMouse(x, y)
 	println(x, y)
 
